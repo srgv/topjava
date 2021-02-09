@@ -30,8 +30,10 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getId() == null || meal.getId() > counter.get()) { //assume id's never ever reach MAX_VALUE-1
+        if (meal.getId() == null) {
             meal.setId(counter.incrementAndGet());
+        } else if (!repository.containsKey(meal.getId())) {
+            return null; //wrong id - no action
         }
         repository.put(meal.getId(), meal);
         return meal;

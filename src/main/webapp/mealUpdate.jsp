@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--@elvariable id="meal" type="ru.javawebinar.topjava.model.Meal"--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -17,7 +18,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h3><%="create".equals(request.getParameter("action")) ? "Add" : "Edit" %> meal</h3>
+<h3><c:out value="${empty meal.id ? 'Add' : 'Edit'}" /> meal</h3>
 
 <form method="post" action="meals">
     <input type="hidden" name="id" value="${meal.id}">

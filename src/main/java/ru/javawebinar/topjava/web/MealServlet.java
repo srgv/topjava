@@ -35,7 +35,7 @@ public class MealServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         if (action == null) {
-            log.debug("forward to meals: main form unfiltered: ");//todo
+            log.debug("forward to meals: main form unfiltered: ");
             request.setAttribute("meals", MealsUtil.filteredByStreams(mealRepository.getAll(),
                     LocalTime.MIN,
                     LocalTime.MAX,
@@ -77,11 +77,13 @@ public class MealServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
 
         String id = req.getParameter("id");
+        log.debug("POST id={}", id);
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(req.getParameter("dateTime")),
                 req.getParameter("description"),
                 Integer.parseInt(req.getParameter("calories")));
         mealRepository.save(meal);
+        log.debug("POST complete for meal={}, redirect to meals", meal);
         resp.sendRedirect("meals");
     }
 
