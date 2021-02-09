@@ -4,17 +4,25 @@
 <head>
     <title>Meal Editor</title>
     <style>
+        dd {
+            display: inline-block;
+            width: 100px;
+        }
 
+        dt {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h3>Edit Meal</h3>
+<h3><%="create".equals(request.getParameter("action")) ? "Add" : "Edit" %> meal</h3>
+
 <form method="post" action="meals">
     <input type="hidden" name="id" value="${meal.id}">
     <dl>
-        <dd>DateTime</dd>
+        <dd>DateTime:</dd>
         <dt><input type="datetime-local" value="${meal.dateTime}" name="dateTime"></dt>
     </dl>
     <dl>
@@ -26,7 +34,7 @@
         <dt><input type="number" value="${meal.calories}" name="calories"></dt>
     </dl>
     <button type="submit">Save</button>
-    <button onclick="history.back()">Cancel</button>
+    <button onclick="history.back(); return false">Cancel</button>
 </form>
 </body>
 </html>
