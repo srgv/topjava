@@ -5,14 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -55,11 +58,31 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
+        return getAllFiltered(userId, meal -> true);
+    }
+
+    @Override
+    public List<Meal> getBetweenHalfOpen(LocalDateTime start, LocalDateTime end, int userId) {
+        return getAllFiltered(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(), start, end));
+    }
+
+
+    private List<Meal> getAllFiltered(int userId, Predicate<Meal> filter) {
         Map<Integer, Meal> repository = usersMealsRepository.get(userId);
         return repository == null ? Collections.emptyList() :
                 repository.values().stream()
+                        .filter(filter)
                         .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                         .collect(Collectors.toList());
     }
+
+
+//    public List<Meal> getBetweenHalfOpen(LocalDate start, LocalDate end, int userId) {
+//        return getAllFiltered(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), start, end));
+//    }
+//
+//    public List<Meal> getBetweenHalfOpen(LocalTime start, LocalTime end, int userId) {
+//        return getAllFiltered(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), start, end));
+//    }
 }
 

@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -60,6 +61,12 @@ public class MealRestController {
     }
 
     public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return getAll(); //todo ПОКА СТОИТ ЗАГЛУШКА
+        if (startDate == null || endDate == null || startTime == null || endTime == null) {
+            return getAll();
+        }
+        int userId = authUserId();
+        LocalDateTime start = LocalDateTime.of(startDate, startTime);
+        LocalDateTime end = LocalDateTime.of(endDate, endTime);
+        return MealsUtil.getTos(service.getBetweenHalfOpen(start, end, userId), authUserCaloriesPerDay());
     }
 }
